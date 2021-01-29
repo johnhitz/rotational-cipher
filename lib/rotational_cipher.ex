@@ -11,41 +11,21 @@ defmodule RotationalCipher do
     text =
       text
     |> String.to_charlist()
-    |> IO.inspect()
     |> Enum.reduce([], fn x, acc ->
-      IO.puts x
-      [shift_letter(x, shift) | acc]
+      [encrypt(x, shift) | acc]
     end)
     |> Enum.reverse()
     |> List.to_string()
   end
 
-  def shift_letter(int, shift) when shift == 0 or shift == 26 do
-    # IO.puts "Now this is hardly shifty at all!"
-    int
-  end
-  def shift_letter(int, shift) when shift >= 0 and shift < 26 do
-    if(RotationalCipher.is_letter(int) == true) do
-     case int do
-      int when int + shift >= 65 and int + shift <= 90 ->
-        int + shift
-      int when int >= 65 and int <= 90 and int + shift >= 90 ->
-        over_flow = int + shift - 90
-        64 + over_flow
-      int when int + shift >= 97 and int + shift <= 122 ->
-        int + shift
-      int when int + shift > 122 ->
-        over_flow = int + shift - 122
-        96 + over_flow
-     end
-    else
-      int
+  def encrypt(letter, shift) do
+    case letter do
+      letter when letter in ?a..?z ->
+        ?a + Integer.mod(letter + shift - ?a, 26)
+      int when int in ?A..?Z ->
+        ?A + Integer.mod(letter + shift - ?A, 26)
+      _ -> letter
     end
-  end
 
-  def is_letter(int) do
-    if((97 <= int and int <= 122) || (65 <= int and int <= 90)) do
-      true
-    end
   end
 end
